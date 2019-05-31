@@ -4,7 +4,12 @@ import Signup from "./views/SignUp";
 import Signin from "./views/SignIn";
 import Dashboard from "./Dashboard";
 import Home from "./views/Home";
-import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Redirect
+} from "react-router-dom";
 import AuthenticatedRoute from "./authentication/AuthenticatedRoute";
 
 export const AppContext = React.createContext();
@@ -12,7 +17,7 @@ export const AppContext = React.createContext();
 class App extends Component {
   state = {
     user: null,
-    authenticated: true
+    authenticated: false
   };
 
   updateState = (user, authenticated) => {
@@ -40,7 +45,9 @@ class App extends Component {
             <Route
               exact
               path="/"
-              render={props => (authenticated ? <Dashboard /> : <Home />)}
+              render={props =>
+                authenticated ? <Redirect to="/dashboard" /> : <Home />
+              }
             />
           </Switch>
         </Router>
