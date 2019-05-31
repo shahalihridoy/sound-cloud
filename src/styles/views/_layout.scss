@@ -1,0 +1,115 @@
+.sidenav,
+.topbar,
+.container {
+  transition: all 0.4s ease;
+}
+.sidenav {
+  position: fixed;
+  height: 100vh;
+  color: rgba($color: #ffffff, $alpha: 0.87);
+  background-image: url("/assets/images/sidebar-bg-dark.jpg");
+  background-repeat: no-repeat;
+  background-position: top;
+  overflow: hidden;
+  z-index: 3;
+
+  &::after {
+    content: " ";
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.74);
+    width: 220px;
+    z-index: -1;
+  }
+}
+.container {
+  background: white;
+  .topbar {
+    top: 0;
+    position: sticky;
+    z-index: 1;
+  }
+  .content {
+  }
+}
+
+// sidenav full
+.sidenav-full {
+  .sidenav {
+    width: 220px;
+    .sidenav__toggle {
+      display: block;
+    }
+  }
+  .container {
+    width: calc(100% - 220px);
+    vertical-align: top;
+    margin-left: 220px;
+    .topbar {
+    }
+    .content {
+    }
+  }
+}
+
+// sidenav compact
+.sidenav-compact {
+  .sidenav {
+    width: 56px;
+    &:hover {
+      width: 220px;
+    }
+  }
+  .container {
+    width: calc(100% - 56px);
+    vertical-align: top;
+    margin-left: 56px;
+    .topbar {
+    }
+    .content {
+    }
+  }
+}
+
+// closed sidenav
+.sidenav-close {
+  .sidenav {
+    width: 0px;
+  }
+  .container {
+    width: 100%;
+    vertical-align: top;
+    margin-left: 0px;
+    .topbar {
+    }
+    .content {
+    }
+  }
+}
+
+// mobile sidenav
+.sidenav-mobile {
+  .sidenav {
+    width: 220px;
+  }
+  .sidenav-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    background: rgba(0, 0, 0, 0.54);
+    z-index: 2;
+  }
+  .container {
+    width: 100%;
+    vertical-align: top;
+    margin-left: 0px;
+    .topbar {
+    }
+    .content {
+    }
+  }
+}
