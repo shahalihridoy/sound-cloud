@@ -12,46 +12,35 @@ import {
 } from "react-router-dom";
 import AuthenticatedRoute from "./authentication/AuthenticatedRoute";
 
-export const AppContext = React.createContext();
-
 class App extends Component {
-  state = {
-    user: null,
-    authenticated: false
-  };
-
-  updateState = (user, authenticated) => {
-    this.setState({
-      user,
-      authenticated
-    });
-  };
-
+  componentDidMount() {
+    // firebase.auth().onAuthStateChanged(user => {
+    //   user
+    //     ? localStorage.setItem("user", "true")
+    //     : localStorage.removeItem("user");
+    // });
+  }
   render() {
-    let { authenticated } = this.state;
+    let authenticated = localStorage.getItem("user");
     return (
-      <AppContext.Provider
-        value={{ ...this.state, updateState: this.updateState }}
-      >
-        <Router>
-          <Switch>
-            <AuthenticatedRoute
-              component={Dashboard}
-              authenticated={authenticated}
-              path="/dashboard"
-            />
-            <Route path="/signup" component={Signup} />
-            <Route path="/signin" component={Signin} />
-            <Route
-              exact
-              path="/"
-              render={props =>
-                authenticated ? <Redirect to="/dashboard" /> : <Home />
-              }
-            />
-          </Switch>
-        </Router>
-      </AppContext.Provider>
+      <Router>
+        <Switch>
+          <AuthenticatedRoute
+            component={Dashboard}
+            authenticated={authenticated}
+            path="/dashboard"
+          />
+          <Route path="/signup" component={Signup} />
+          <Route path="/signin" component={Signin} />
+          <Route
+            exact
+            path="/"
+            render={props =>
+              authenticated ? <Redirect to="/dashboard" /> : <Home />
+            }
+          />
+        </Switch>
+      </Router>
     );
   }
 }

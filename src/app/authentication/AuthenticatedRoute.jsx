@@ -10,7 +10,7 @@ const AuthenticatedRoute = ({
     <Route
       {...rest}
       render={props =>
-        authenticated === true ? (
+        authenticated === "true" ? (
           <Component {...props} {...rest} />
         ) : (
           <Redirect to="/signin" />

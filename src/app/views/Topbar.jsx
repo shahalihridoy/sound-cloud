@@ -6,7 +6,7 @@ class Topbar extends Component {
   state = {};
   render() {
     return (
-      <Card className="topbar w-100 px-16 py-8">
+      <Card className="topbar px-16 py-8">
         <div className="flex flex-space-between container">
           <div className="flex flex-wrap flex-middle">
             <Icon style={{ fontSize: "2rem" }}>cloud</Icon>
@@ -35,6 +35,9 @@ class Topbar extends Component {
             </IconButton>
             <IconButton>
               <Icon>mail</Icon>
+            </IconButton>
+            <IconButton>
+              <Icon>power_settings_new</Icon>
             </IconButton>
             <IconButton>
               <Icon>more_hor</Icon>

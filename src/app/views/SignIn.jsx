@@ -2,34 +2,53 @@ import React, { Component, Fragment } from "react";
 import { ValidatorForm, TextValidator } from "react-material-ui-form-validator";
 import { Fab, Icon, MenuItem, Button, Divider } from "@material-ui/core";
 import { Card } from "@material-ui/core";
+import firebase from "../authentication/FirebaseConfig";
+import SimpleSnackbar from "../common/SimpleSnackbar";
+import CustomSnackbar from "../common/SimpleSnackbar";
 
 class Signin extends Component {
   state = {
-    name: "",
     email: "",
-    password: "",
-    age: "",
-    gender: ""
+    password: ""
   };
 
-  genderList = [
-    {
-      value: "male",
-      label: "Male"
-    },
-    {
-      value: "female",
-      label: "Female"
-    },
-    {
-      value: "other",
-      label: "Other"
-    }
-  ];
-
   handleSubmit = event => {
-    console.log("submitted");
-    console.log(this.state);
+    let { email, password } = this.state;
+    let signinRef = firebase.auth().signInWithEmailAndPassword(email, password);
+
+    signinRef.catch(error => {
+      console.log(error);
+    });
+
+    signinRef.then(() => {
+      this.props.history.push("/dashboard");
+    });
+    // firebase.firestore().doc("jfjd").
+  };
+
+  siginInWithGoogle = () => {
+    firebase
+      .firestore()
+      .collection("/test")
+      .add({ data: "asshole" });
+    var provider = new firebase.auth.GoogleAuthProvider();
+    provider.addScope("profile");
+    provider.addScope("email");
+    provider.addScope("https://www.googleapis.com/auth/plus.me");
+    firebase
+      .auth()
+      .signInWithPopup(provider)
+      .then(result => {
+        var token = result.credential.accessToken;
+        var user = result.user;
+        this.props.history.push("/dashboard");
+      })
+      .catch(error => {
+        var errorCode = error.code;
+        var errorMessage = error.message;
+        var email = error.email;
+        var credential = error.credential;
+      });
   };
 
   handleChange = event => {
@@ -38,7 +57,7 @@ class Signin extends Component {
   };
 
   render() {
-    let { name, email, password, age, gender } = this.state;
+    let { email, password } = this.state;
     return (
       <Fragment>
         <div className="signin__bg w-100 h-100vh" />
@@ -92,11 +111,18 @@ class Signin extends Component {
             </ValidatorForm>
 
             <Divider className="my-12" variant="middle" />
-            <Button className=" x-center" variant="contained" color="primary">
+            <Button
+              onClick={this.siginInWithGoogle}
+              className=" x-center"
+              variant="contained"
+              color="primary"
+            >
               Sign In with Google
             </Button>
           </Card>
         </div>
+
+        <SimpleSnackbar />
       </Fragment>
     );
   }
