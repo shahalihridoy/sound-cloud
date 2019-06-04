@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import "../styles/app.scss";
 import Signup from "./views/SignUp";
 import Signin from "./views/SignIn";
-import Dashboard from "./Dashboard";
+import Dashboard from "./views/Dashboard";
 import Home from "./views/Home";
 import {
   BrowserRouter as Router,

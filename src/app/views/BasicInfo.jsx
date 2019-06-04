@@ -13,14 +13,20 @@ import {
 
 class BasicInfo extends Component {
   genreList = ["Classic", "Dance", "Disco", "Deep House"];
+
   state = {
     imgUrl: "/assets/images/bg-1.jpg",
     img: ""
   };
+
   handleImageSelect = event => {
-    let url = URL.createObjectURL(event.target.files[0]);
-    this.setState({ imgUrl: url, img: event.target.files[0] });
+    let file = event.target.files[0];
+    let url = URL.createObjectURL(file);
+
+    this.setState({ imgUrl: url });
+    this.props.handleImageSelection(file);
   };
+
   render() {
     let {
       title,
@@ -28,6 +34,7 @@ class BasicInfo extends Component {
       tag,
       description,
       permission,
+      loading,
       handleInputChange,
       handleSubmit,
       handleCancel
@@ -140,6 +147,7 @@ class BasicInfo extends Component {
                 variant="contained"
                 color="secondary"
                 type="submit"
+                disabled={loading}
               >
                 Save
               </Button>

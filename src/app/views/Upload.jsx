@@ -9,7 +9,7 @@ class Upload extends Component {
     files: []
   };
 
-  handleDrag = event => {
+  heldleAudioSelection = event => {
     event.persist();
     this.setState({
       fileNumber: event.target.files.length,
@@ -43,6 +43,11 @@ class Upload extends Component {
     this.setState({ files: [...files] });
   };
 
+  componentDidUpdate() {
+    window.scrollTo({ behavior: "smooth" });
+    window.scrollTo(0, 600);
+  }
+
   render() {
     let { elevation, files } = this.state;
     return (
@@ -51,8 +56,8 @@ class Upload extends Component {
           elevation={elevation}
           className={
             elevation > 2
-              ? "flex-column flex-center text-center w-100 dotted-border"
-              : "flex-column flex-center text-center w-100"
+              ? "flex-column flex-center text-center h-500 w-100 dotted-border"
+              : "flex-column flex-center text-center h-500 w-100"
           }
           onDragEnter={this.handleDragStart}
           onDragOver={this.handleDragOver}
@@ -78,7 +83,7 @@ class Upload extends Component {
         </Card>
         <input
           accept="audio/*"
-          onChange={this.handleDrag}
+          onChange={this.heldleAudioSelection}
           id="upload-file"
           type="file"
           multiple

@@ -1,11 +1,10 @@
 .topbar {
-  // box-shadow: $box-shadow;
-
+  background: #313131 !important;
   a {
     padding: 8px 16px;
     border-radius: 4px;
     &:hover {
-      background: rgba(0, 0, 0, 0.1);
+      background: #515151;
     }
   }
 }

@@ -1,8 +1,8 @@
 import React, { Component, Fragment } from "react";
 import { Route, Switch, Redirect } from "react-router-dom";
-import Topbar from "./views/Topbar";
-import Upload from "./views/Upload";
-import Tracks from "./views/Tracks";
+import Topbar from "./Topbar";
+import Upload from "./Upload";
+import Tracks from "./Tracks";
 
 class Dashboard extends Component {
   render() {

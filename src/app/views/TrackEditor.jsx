@@ -5,20 +5,34 @@ import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
 import BasicInfo from "./BasicInfo";
 import Metadata from "./Metadata";
+import SimpleSnackbar from "../common/SimpleSnackbar";
+import firebase from "../authentication/FirebaseConfig";
 
 class TrackEditor extends Component {
+  imageFile = null;
+
   state = {
-    value: 0,
     title: "",
     genre: "",
     tag: "",
     description: "",
     permission: "public",
-    license: "All rights reserved"
+    license: "All rights reserved",
+    trackUrl: "",
+    trackID: "",
+    imgUrl: "",
+    tabIndex: 0,
+    progress: 0,
+    uploaded: 0,
+    loading: false,
+    snackbar: {
+      open: false,
+      message: ""
+    }
   };
 
-  handleChange = (event, value) => {
-    this.setState({ value });
+  handleTabChange = (event, value) => {
+    this.setState({ tabIndex: value });
   };
 
   handleInputChange = event => {
@@ -26,40 +40,186 @@ class TrackEditor extends Component {
     this.setState({ [event.target.name]: event.target.value });
   };
 
-  handleFormSubmit = () => {};
+  handleFormSubmit = () => {
+    let { trackID } = this.state;
+    this.setState({ loading: true });
+    if (this.state.trackUrl) {
+      let trackData = { ...this.state };
+      delete trackData.snackbar;
+      delete trackData.uploaded;
+      delete trackData.progress;
+      delete trackData.tabIndex;
+      delete trackData.loading;
+      delete trackData.trackID;
+
+      if (trackID) {
+        if (this.imageFile != null && this.state.imgUrl === "") {
+          this.uploadImage();
+        } else {
+          firebase
+            .firestore()
+            .collection("tracks")
+            .doc("user-1")
+            .collection("test")
+            .doc(trackID)
+            .update({ ...trackData, time: new Date().toDateString() })
+            .then(() => {
+              this.setState({
+                loading: false,
+                snackbar: { open: true, message: "Saved Successfully" }
+              });
+            })
+            .catch(error => {
+              this.setState({
+                loading: false,
+                snackbar: { open: true, message: error.message }
+              });
+            });
+        }
+      } else {
+        firebase
+          .firestore()
+          .collection("tracks")
+          .doc("user-1")
+          .collection("test")
+          .add({ ...trackData, time: new Date().toDateString() })
+          .then(snapshot => {
+            this.setState({
+              loading: false,
+              trackID: snapshot.id,
+              snackbar: { open: true, message: "Updated Successfully" }
+            });
+          })
+          .catch(error => {
+            this.setState({
+              loading: false,
+              snackbar: { open: true, message: error.message }
+            });
+          });
+      }
+    } else {
+      this.uploadTrack();
+    }
+  };
+
+  uploadImage = () => {
+    if (this.imageFile != null) {
+      let uploadTask = firebase
+        .storage()
+        .ref("track-photo/")
+        .child(this.imageFile.name)
+        .put(this.imageFile);
+
+      uploadTask.snapshot.ref
+        .getDownloadURL()
+        .then(imgUrl => {
+          this.setState({ imgUrl });
+          this.handleFormSubmit();
+        })
+        .catch(error => {
+          console.log(error);
+
+          this.setState({
+            imgUrl: "/", //to prevent recursive call a value is set if error occurs
+            snackbar: { open: true, message: error.message }
+          });
+          this.handleFormSubmit();
+        });
+    } else {
+      this.handleFormSubmit();
+    }
+  };
+
+  uploadTrack = () => {
+    let { file } = this.props;
+    let uploadTask = firebase
+      .storage()
+      .ref("tracks/")
+      .child("user-1/" + file.name)
+      .put(file);
+
+    uploadTask.on(
+      "state_changed",
+      snapshot => {
+        let prog = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+        this.setState({ progress: prog, uploaded: snapshot.bytesTransferred });
+      },
+      error => {
+        this.setState({
+          loading: false,
+          snackbar: {
+            open: true,
+            message: error.message
+          }
+        });
+      },
+      () => {
+        uploadTask.snapshot.ref.getDownloadURL().then(url => {
+          this.setState({
+            // loading: false,
+            trackUrl: url
+          });
+
+          // calling submit to put data into database
+          this.uploadImage();
+          // this.handleFormSubmit();
+        });
+      }
+    );
+  };
 
   componentWillMount() {
     this.setState({ title: this.props.file.name });
   }
 
+  handleSnackbarClose = () => {
+    this.setState({
+      snackbar: {
+        open: false
+      }
+    });
+  };
+
+  handleImageSelection = file => {
+    // set imgUrl to null on new image selection
+    this.setState({ imgUrl: "" });
+    this.imageFile = file;
+  };
+
   render() {
-    let { value } = this.state;
+    let { tabIndex, snackbar, progress, uploaded } = this.state;
     let { file, handleCancel } = this.props;
     return (
       <Card className="my-16">
         <div className="flex flex-space-between light-gray py-12 px-16">
           <span>{file.name}</span>
           <span>
-            0.23MB of {(file.size / 1024 / 1024).toFixed(2)}MB uploaded
+            {(uploaded / 1024 / 1024).toFixed(2)} MB of{" "}
+            {(file.size / 1024 / 1024).toFixed(2)} MB uploaded
           </span>
         </div>
-        <LinearProgress color="primary" variant="determinate" value={70} />
+        <LinearProgress
+          color="primary"
+          variant="determinate"
+          value={progress}
+        />
         <div className="p-16 relative">
           <Tabs
-            value={value}
-            onChange={this.handleChange}
+            value={tabIndex}
+            onChange={this.handleTabChange}
             indicatorColor="secondary"
             textColor="secondary"
             variant="standard"
           >
             <Tab className="capitalize" label="basic info" />
             <Tab className="capitalize" label="metadata" />
-            <Tab className="capitalize" label="permissions" />
+            {/* <Tab className="capitalize" label="permissions" /> */}
           </Tabs>
           <Divider />
-          <SwipeableViews index={value}>
+          <SwipeableViews index={tabIndex}>
             <BasicInfo
               fileName={file.name}
+              handleImageSelection={this.handleImageSelection}
               state={{
                 ...this.state,
                 handleInputChange: this.handleInputChange,
@@ -76,9 +236,15 @@ class TrackEditor extends Component {
                 handleCancel: handleCancel
               }}
             />
-            <div>Item Three</div>
+            {/* <div>Item Three</div> */}
           </SwipeableViews>
         </div>
+
+        <SimpleSnackbar
+          open={snackbar.open}
+          message={snackbar.message}
+          handleClose={this.handleSnackbarClose}
+        />
       </Card>
     );
   }

@@ -14,19 +14,12 @@ const useStyles = makeStyles(theme => ({
 
 const SimpleSnackbar = props => {
   const classes = useStyles();
-  const [open, setOpen] = React.useState(false);
+  let { handleClose, open, message } = props;
+  // const [open, openSnackbar] = React.useState(true);
 
-  const handleClick = () => {
-    setOpen(true);
-  };
-
-  const handleClose = (event, reason) => {
-    if (reason === "clickaway") {
-      return;
-    }
-
-    setOpen(false);
-  };
+  // const handleClose = () => {
+  //   openSnackbar(false);
+  // };
 
   return (
     <Snackbar
@@ -35,16 +28,13 @@ const SimpleSnackbar = props => {
         horizontal: "center"
       }}
       open={open}
-      autoHideDuration={6000}
+      autoHideDuration={5000}
       onClose={handleClose}
       ContentProps={{
         "aria-describedby": "message-id"
       }}
-      message={<span id="message-id">Note archived</span>}
+      message={<span id="message-id">{message}</span>}
       action={[
-        <Button key="undo" color="secondary" size="small" onClick={handleClose}>
-          UNDO
-        </Button>,
         <IconButton
           key="close"
           aria-label="Close"

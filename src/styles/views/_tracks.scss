@@ -1,0 +1,17 @@
+.track-card {
+  img {
+    width: 150px;
+    height: auto;
+    vertical-align: middle;
+  }
+
+  .track-options {
+    visibility: hidden;
+  }
+
+  &:hover {
+    .track-options {
+      visibility: visible;
+    }
+  }
+}

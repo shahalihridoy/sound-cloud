@@ -13,6 +13,7 @@ import {
 class Metadata extends Component {
   render() {
     let {
+      loading,
       contains_music,
       composer,
       publisher,
@@ -215,6 +216,7 @@ class Metadata extends Component {
               variant="contained"
               color="secondary"
               type="submit"
+              disabled={loading}
             >
               Save
             </Button>
