@@ -38,8 +38,9 @@ class Signin extends Component {
     firebase
       .auth()
       .signInWithEmailAndPassword(email, password)
-      .then(() => {
+      .then(({ user }) => {
         localStorage.setItem("user", "true");
+        localStorage.setItem("uid", user.uid);
         this.props.history.push("/dashboard");
       })
       .catch(error => {
@@ -54,10 +55,6 @@ class Signin extends Component {
   };
 
   siginInWithGoogle = () => {
-    firebase
-      .firestore()
-      .collection("/test")
-      .add({ data: "asshole" });
     var provider = new firebase.auth.GoogleAuthProvider();
     provider.addScope("profile");
     provider.addScope("email");
@@ -65,17 +62,22 @@ class Signin extends Component {
     firebase
       .auth()
       .signInWithPopup(provider)
-      .then(result => {
-        var token = result.credential.accessToken;
-        var user = result.user;
-        this.props.history.push("/dashboard");
+      .then(({ user }) => {
+        firebase
+          .firestore()
+          .collection("users")
+          .doc(user.uid)
+          .set({
+            email: user.email,
+            username: user.displayName
+          })
+          .then(() => {
+            localStorage.setItem("user", "true");
+            localStorage.setItem("uid", user.uid);
+            this.props.history.push("/dashboard");
+          });
       })
-      .catch(error => {
-        var errorCode = error.code;
-        var errorMessage = error.message;
-        var email = error.email;
-        var credential = error.credential;
-      });
+      .catch(error => {});
   };
 
   handleChange = event => {

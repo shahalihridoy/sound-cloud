@@ -7,9 +7,12 @@ import BasicInfo from "./BasicInfo";
 import Metadata from "./Metadata";
 import SimpleSnackbar from "../common/SimpleSnackbar";
 import firebase from "../authentication/FirebaseConfig";
+import { Context } from "../App";
 
 class TrackEditor extends Component {
   imageFile = null;
+  username = "";
+  uid = "uid";
 
   state = {
     title: "",
@@ -42,6 +45,19 @@ class TrackEditor extends Component {
 
   handleFormSubmit = () => {
     let { trackID } = this.state;
+    let uid = this.uid;
+    // when user id is not available
+    if (uid === "uid") {
+      this.setState({
+        loading: false,
+        snackbar: {
+          open: true,
+          message: "User is not available. Try login"
+        }
+      });
+      return;
+    }
+
     this.setState({ loading: true });
     if (this.state.trackUrl) {
       let trackData = { ...this.state };
@@ -58,11 +74,15 @@ class TrackEditor extends Component {
         } else {
           firebase
             .firestore()
+            .collection("all-tracks")
+            .doc(uid)
             .collection("tracks")
-            .doc("user-1")
-            .collection("test")
             .doc(trackID)
-            .update({ ...trackData, time: new Date().toDateString() })
+            .update({
+              ...trackData,
+              time: new Date().toDateString(),
+              username: this.username
+            })
             .then(() => {
               this.setState({
                 loading: false,
@@ -79,10 +99,14 @@ class TrackEditor extends Component {
       } else {
         firebase
           .firestore()
+          .collection("all-tracks")
+          .doc(uid)
           .collection("tracks")
-          .doc("user-1")
-          .collection("test")
-          .add({ ...trackData, time: new Date().toDateString() })
+          .add({
+            ...trackData,
+            time: new Date().toDateString(),
+            username: this.username
+          })
           .then(snapshot => {
             this.setState({
               loading: false,
@@ -107,7 +131,7 @@ class TrackEditor extends Component {
       let uploadTask = firebase
         .storage()
         .ref("track-photo/")
-        .child(this.imageFile.name)
+        .child(this.uid + "/" + this.imageFile.name)
         .put(this.imageFile);
 
       uploadTask.snapshot.ref
@@ -135,7 +159,7 @@ class TrackEditor extends Component {
     let uploadTask = firebase
       .storage()
       .ref("tracks/")
-      .child("user-1/" + file.name)
+      .child(this.uid + "/" + file.name)
       .put(file);
 
     uploadTask.on(
@@ -169,7 +193,13 @@ class TrackEditor extends Component {
   };
 
   componentWillMount() {
-    this.setState({ title: this.props.file.name });
+    this.setState({
+      title: this.props.file.name
+    });
+  }
+
+  componentWillReceiveProps(props) {
+    console.log(props);
   }
 
   handleSnackbarClose = () => {
@@ -245,6 +275,12 @@ class TrackEditor extends Component {
           message={snackbar.message}
           handleClose={this.handleSnackbarClose}
         />
+        <Context.Consumer>
+          {({ username, uid }) => {
+            this.username = username;
+            this.uid = uid;
+          }}
+        </Context.Consumer>
       </Card>
     );
   }

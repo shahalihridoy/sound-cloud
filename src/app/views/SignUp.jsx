@@ -57,6 +57,8 @@ class Signup extends Component {
           .doc(user.uid)
           .set(userData)
           .then(() => {
+            localStorage.setItem("user", "true");
+            localStorage.setItem("uid", user.uid);
             this.props.history.push("/dashboard");
           });
       })
