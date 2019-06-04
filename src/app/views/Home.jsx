@@ -12,7 +12,7 @@ const Home = () => {
             cloud
           </Icon>
           <span style={{ fontSize: "1.25rem", fontWeight: "500" }}>
-            Sound Cloud
+            Limelight
           </span>
         </div>
         <div className="pr-16">
