@@ -106,7 +106,7 @@ class Signup extends Component {
           .then(() => {
             localStorage.setItem("user", "true");
             localStorage.setItem("uid", user.uid);
-            this.props.history.push("/dashboard");
+            this.props.history.push("/dashboard/upload");
           });
       })
       .catch(error => {});

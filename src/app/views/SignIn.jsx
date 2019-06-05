@@ -33,7 +33,7 @@ class Signin extends Component {
       .then(({ user }) => {
         localStorage.setItem("user", "true");
         localStorage.setItem("uid", user.uid);
-        this.props.history.push("/dashboard");
+        this.props.history.push("/dashboard/upload");
       })
       .catch(error => {
         this.setState({
@@ -59,14 +59,17 @@ class Signin extends Component {
           .firestore()
           .collection("users")
           .doc(user.uid)
-          .set({
-            email: user.email,
-            username: user.displayName
-          })
+          .set(
+            {
+              email: user.email,
+              username: user.displayName
+            },
+            { merge: true }
+          )
           .then(() => {
             localStorage.setItem("user", "true");
             localStorage.setItem("uid", user.uid);
-            this.props.history.push("/dashboard");
+            this.props.history.push("/dashboard/upload");
           });
       })
       .catch(error => {});
