@@ -14,7 +14,7 @@ import firebase from "../authentication/FirebaseConfig";
 
 class Signup extends Component {
   state = {
-    name: "",
+    username: "",
     email: "",
     password: "",
     age: "",
@@ -86,8 +86,42 @@ class Signup extends Component {
     });
   };
 
+  siginInWithGoogle = () => {
+    var provider = new firebase.auth.GoogleAuthProvider();
+    provider.addScope("profile");
+    provider.addScope("email");
+    provider.addScope("https://www.googleapis.com/auth/plus.me");
+    firebase
+      .auth()
+      .signInWithPopup(provider)
+      .then(({ user }) => {
+        firebase
+          .firestore()
+          .collection("users")
+          .doc(user.uid)
+          .set({
+            email: user.email,
+            username: user.displayName
+          })
+          .then(() => {
+            localStorage.setItem("user", "true");
+            localStorage.setItem("uid", user.uid);
+            this.props.history.push("/dashboard");
+          });
+      })
+      .catch(error => {});
+  };
+
   render() {
-    let { name, email, password, age, gender, snackbar, loading } = this.state;
+    let {
+      username,
+      email,
+      password,
+      age,
+      gender,
+      snackbar,
+      loading
+    } = this.state;
     return (
       <Fragment>
         <div className="signin__bg w-100 h-100vh" />
@@ -112,8 +146,8 @@ class Signup extends Component {
                   className="mb-8 w-100"
                   label="Name"
                   onChange={this.handleChange}
-                  name="name"
-                  value={name}
+                  name="username"
+                  value={username}
                   validators={["required"]}
                   errorMessages={["This field is required"]}
                   variant="outlined"
@@ -185,7 +219,12 @@ class Signup extends Component {
               </ValidatorForm>
 
               <Divider className="my-12" variant="middle" />
-              <Button className=" x-center" variant="contained" color="primary">
+              <Button
+                onClick={this.siginInWithGoogle}
+                className=" x-center"
+                variant="contained"
+                color="primary"
+              >
                 Sign In with Google
               </Button>
             </div>

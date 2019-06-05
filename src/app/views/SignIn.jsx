@@ -1,14 +1,6 @@
 import React, { Component, Fragment } from "react";
 import { ValidatorForm, TextValidator } from "react-material-ui-form-validator";
-import {
-  Fab,
-  Icon,
-  MenuItem,
-  Button,
-  Divider,
-  CircularProgress,
-  LinearProgress
-} from "@material-ui/core";
+import { Icon, Button, Divider, LinearProgress } from "@material-ui/core";
 import { Card } from "@material-ui/core";
 import firebase from "../authentication/FirebaseConfig";
 import SimpleSnackbar from "../common/SimpleSnackbar";
@@ -137,6 +129,7 @@ class Signin extends Component {
                   variant="contained"
                   type="submit"
                   color="secondary"
+                  onClick={this.handleSubmit}
                   disabled={loading}
                 >
                   <Icon className="mr-8">near_me</Icon>Sign In

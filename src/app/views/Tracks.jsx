@@ -47,12 +47,12 @@ class Tracks extends Component {
                   />
                 </div>
                 <div className="flex-column flex-space-between">
-                  <p className="m-0 capitalize">
+                  <div className="m-0 capitalize">
                     <strong>{data.title}</strong>
                     <p className="m-0 pt-4 text-muted">
                       {data.username == "Null" ? "" : data.username}
                     </p>
-                  </p>
+                  </div>
                   <div className="text-muted flex flex-middle">
                     <Icon fontSize="small">favorite</Icon>
                     <span className="pr-8">2</span>

@@ -21,6 +21,7 @@ class App extends Component {
     username: "",
     uid: ""
   };
+
   componentDidMount() {
     firebase.auth().onAuthStateChanged(user => {
       if (user) {
@@ -31,7 +32,7 @@ class App extends Component {
           .get()
           .then(doc => {
             localStorage.setItem("user", "true");
-            localStorage.setItem("uid",user.uid);
+            localStorage.setItem("uid", user.uid);
             this.setState({ username: doc.data().username, uid: user.uid });
           });
       } else {

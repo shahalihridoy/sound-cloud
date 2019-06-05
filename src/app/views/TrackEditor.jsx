@@ -7,6 +7,7 @@ import BasicInfo from "./BasicInfo";
 import Metadata from "./Metadata";
 import SimpleSnackbar from "../common/SimpleSnackbar";
 import firebase from "../authentication/FirebaseConfig";
+import { geolocated } from "react-geolocated";
 import { Context } from "../App";
 
 class TrackEditor extends Component {
@@ -198,10 +199,6 @@ class TrackEditor extends Component {
     });
   }
 
-  componentWillReceiveProps(props) {
-    console.log(props);
-  }
-
   handleSnackbarClose = () => {
     this.setState({
       snackbar: {
@@ -218,11 +215,14 @@ class TrackEditor extends Component {
 
   render() {
     let { tabIndex, snackbar, progress, uploaded } = this.state;
-    let { file, handleCancel } = this.props;
+    let { file, handleCancel, coords } = this.props;
     return (
       <Card className="my-16">
         <div className="flex flex-space-between light-gray py-12 px-16">
           <span>{file.name}</span>
+          {/* <span>
+          {coords ? coords.latitude:"not available"}
+          </span> */}
           <span>
             {(uploaded / 1024 / 1024).toFixed(2)} MB of{" "}
             {(file.size / 1024 / 1024).toFixed(2)} MB uploaded
@@ -286,4 +286,15 @@ class TrackEditor extends Component {
   }
 }
 
-export default TrackEditor;
+export default geolocated({
+  positionOptions: {
+    enableHighAccuracy: false,
+    maximumAge: 0,
+    timeout: Infinity
+  },
+  watchPosition: false,
+  userDecisionTimeout: 10000,
+  suppressLocationOnMount: false,
+  geolocationProvider: navigator.geolocation,
+  isOptimisticGeolocationEnabled: true
+})(TrackEditor);
