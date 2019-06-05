@@ -13,6 +13,8 @@ import {
   Redirect
 } from "react-router-dom";
 import AuthenticatedRoute from "./authentication/AuthenticatedRoute";
+import { ThemeProvider } from "@material-ui/styles";
+import { theme } from "./common/Theme";
 
 export const Context = React.createContext();
 
@@ -45,24 +47,26 @@ class App extends Component {
     let authenticated = localStorage.getItem("user");
     return (
       <Context.Provider value={{ ...this.state }}>
-        <Router>
-          <Switch>
-            <AuthenticatedRoute
-              component={Dashboard}
-              authenticated={authenticated}
-              path="/dashboard"
-            />
-            <Route path="/signup" component={Signup} />
-            <Route path="/signin" component={Signin} />
-            <Route
-              exact
-              path="/"
-              render={props =>
-                authenticated ? <Redirect to="/dashboard" /> : <Home />
-              }
-            />
-          </Switch>
-        </Router>
+        <ThemeProvider theme={theme}>
+          <Router>
+            <Switch>
+              <AuthenticatedRoute
+                component={Dashboard}
+                authenticated={authenticated}
+                path="/dashboard"
+              />
+              <Route path="/signup" component={Signup} />
+              <Route path="/signin" component={Signin} />
+              <Route
+                exact
+                path="/"
+                render={props =>
+                  authenticated ? <Redirect to="/dashboard" /> : <Home />
+                }
+              />
+            </Switch>
+          </Router>
+        </ThemeProvider>
       </Context.Provider>
     );
   }

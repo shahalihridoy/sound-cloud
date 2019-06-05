@@ -32,7 +32,7 @@ const Home = () => {
       {/* banner */}
       <div className="home__banner text-center relative w-100">
         <div className="home__banner__details">
-          <h2 className="m-0">Connect on Sound Cloud</h2>
+          <h2 className="m-0">Connect on Limelight</h2>
           <p className="my-0 py-16">
             Discover, stream, and share a constantly expanding mix of music from
             emerging and major artists around the world.

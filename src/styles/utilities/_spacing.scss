@@ -87,6 +87,9 @@ $spaces: (
 .h-100vh {
   height: 100vh;
 }
+.h-100vh-80 {
+  height: calc(100vh - 80px);
+}
 .h-500 {
   height: 500px;
 }

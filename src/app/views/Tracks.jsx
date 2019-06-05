@@ -22,7 +22,9 @@ class Tracks extends Component {
           docs.forEach(element => {
             tempFileList.push(element.data());
           });
-          this.setState({ files: [...tempFileList] });
+          tempFileList.length == 0
+            ? this.setState({ files: null })
+            : this.setState({ files: [...tempFileList] });
         },
         error => {}
       );
@@ -30,7 +32,13 @@ class Tracks extends Component {
 
   render() {
     let { files } = this.state;
-    if (files.length == 0) return <Loader />;
+    if (files == null)
+      return (
+        <div className="container text-center h-100vh-80">
+          <h3 className="relative y-center">No track is uploaded yet !!!</h3>
+        </div>
+      );
+    else if (files.length == 0) return <Loader />;
     else
       return (
         <div className="container my-16">

@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { Icon, Card, IconButton } from "@material-ui/core";
 import { Link, withRouter } from "react-router-dom";
 import firebase from "../authentication/FirebaseConfig";
+import { Context } from "../App";
 
 class Topbar extends Component {
   state = {};
@@ -20,7 +21,7 @@ class Topbar extends Component {
 
   render() {
     return (
-      <Card elevation={3} className="topbar px-16 py-8">
+      <Card elevation={3} className="topbar px-16 py-8 border-radius-none">
         <div className="flex flex-space-between">
           <div className="flex flex-wrap flex-middle text-white">
             <Icon style={{ fontSize: "2rem" }}>cloud</Icon>
@@ -40,10 +41,17 @@ class Topbar extends Component {
               My Track
             </Link>
           </div>
-          <div>
+          <div className="flex flex-middle">
             <IconButton>
               <Icon className="text-white">person</Icon>
             </IconButton>
+            <Context.Consumer>
+              {({ username }) =>
+                username ? (
+                  <span className="capitalize text-white pr-8">{username}</span>
+                ) : null
+              }
+            </Context.Consumer>
             <IconButton>
               <Icon className="text-white">notifications</Icon>
             </IconButton>
