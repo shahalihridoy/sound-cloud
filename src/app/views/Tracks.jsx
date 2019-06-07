@@ -63,9 +63,9 @@ class Tracks extends Component {
                   </div>
                   <div className="text-muted flex flex-middle">
                     <Icon fontSize="small">favorite</Icon>
-                    <span className="pr-8">2</span>
+                    <span className="pr-16 pb-3">2</span>
                     <Icon fontSize="small">message</Icon>
-                    <span>1</span>
+                    <span className="pb-3">1</span>
                   </div>
                 </div>
               </div>

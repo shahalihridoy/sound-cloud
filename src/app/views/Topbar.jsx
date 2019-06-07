@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { Icon, Card, IconButton } from "@material-ui/core";
 import { Link, withRouter } from "react-router-dom";
 import firebase from "../authentication/FirebaseConfig";
-import { Context } from "../App";
+import { Context } from "../common/Context";
 
 class Topbar extends Component {
   state = {};

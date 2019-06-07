@@ -15,8 +15,8 @@ import {
 import AuthenticatedRoute from "./authentication/AuthenticatedRoute";
 import { ThemeProvider } from "@material-ui/styles";
 import { theme } from "./common/Theme";
-
-export const Context = React.createContext();
+import Pricing from "./views/Pricing";
+import { Context } from "./common/Context";
 
 class App extends Component {
   state = {
@@ -57,6 +57,7 @@ class App extends Component {
               />
               <Route path="/signup" component={Signup} />
               <Route path="/signin" component={Signin} />
+              <Route path="/pricing" component={Pricing} />
               <Route
                 exact
                 path="/"

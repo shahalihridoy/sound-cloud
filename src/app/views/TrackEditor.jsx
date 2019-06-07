@@ -7,8 +7,7 @@ import BasicInfo from "./BasicInfo";
 import Metadata from "./Metadata";
 import SimpleSnackbar from "../common/SimpleSnackbar";
 import firebase from "../authentication/FirebaseConfig";
-import { geolocated } from "react-geolocated";
-import { Context } from "../App";
+import { Context } from "../common/Context";
 
 class TrackEditor extends Component {
   imageFile = null;
@@ -213,16 +212,20 @@ class TrackEditor extends Component {
     this.imageFile = file;
   };
 
+  getUserInfo = () => {
+    let { username, uid } = this.context;
+    this.username = username;
+    this.uid = uid;
+  };
+
   render() {
     let { tabIndex, snackbar, progress, uploaded } = this.state;
-    let { file, handleCancel, coords } = this.props;
+    let { file, handleCancel } = this.props;
+    this.getUserInfo();
     return (
       <Card className="my-16">
         <div className="flex flex-space-between light-gray py-12 px-16">
           <span>{file.name}</span>
-          {/* <span>
-          {coords ? coords.latitude:"not available"}
-          </span> */}
           <span>
             {(uploaded / 1024 / 1024).toFixed(2)} MB of{" "}
             {(file.size / 1024 / 1024).toFixed(2)} MB uploaded
@@ -275,26 +278,11 @@ class TrackEditor extends Component {
           message={snackbar.message}
           handleClose={this.handleSnackbarClose}
         />
-        <Context.Consumer>
-          {({ username, uid }) => {
-            this.username = username;
-            this.uid = uid;
-          }}
-        </Context.Consumer>
       </Card>
     );
   }
 }
 
-export default geolocated({
-  positionOptions: {
-    enableHighAccuracy: false,
-    maximumAge: 0,
-    timeout: Infinity
-  },
-  watchPosition: false,
-  userDecisionTimeout: 10000,
-  suppressLocationOnMount: false,
-  geolocationProvider: navigator.geolocation,
-  isOptimisticGeolocationEnabled: true
-})(TrackEditor);
+TrackEditor.contextType = Context;
+
+export default TrackEditor;

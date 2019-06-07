@@ -1,0 +1,33 @@
+.pricing {
+  .pricing__card-header {
+    padding: 12px;
+    background: rgba(0, 0, 0, 0.024);
+
+    span:first-child {
+      font-size: 1rem !important;
+    }
+    span:last-child {
+      font-size: 0.813rem;
+    }
+  }
+
+  .pricing__highlighted {
+    background: $brand !important;
+    span {
+      color: #fff;
+    }
+  }
+
+  .pricing__card-content {
+    h1 {
+      margin: 0;
+      font-weight: normal;
+      margin-bottom: 0.5rem;
+      font-size: 5rem;
+    }
+
+    div {
+      white-space: pre;
+    }
+  }
+}
