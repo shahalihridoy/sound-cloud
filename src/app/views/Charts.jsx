@@ -3,7 +3,7 @@ import { Card, IconButton, Icon } from "@material-ui/core";
 import firebase from "../authentication/FirebaseConfig";
 import Loader from "../common/Loader";
 
-class Tracks extends Component {
+class Charts extends Component {
   state = {
     files: []
   };
@@ -13,9 +13,8 @@ class Tracks extends Component {
     firebase
       .firestore()
       .collection("all-tracks")
-      .doc(localStorage.getItem("uid"))
-      .collection("tracks")
       .orderBy("time", "desc")
+      .limit(20)
       .onSnapshot(
         docs => {
           tempFileList = [];
@@ -44,7 +43,7 @@ class Tracks extends Component {
         <div className="container my-16">
           {files.map((data, index) => (
             <Card
-              className="track-card flex flex-middle flex-space-between p-16"
+              className="track-card flex flex-middle flex-space-between p-16 mb-8"
               key={index}
             >
               <div className="flex">
@@ -62,9 +61,14 @@ class Tracks extends Component {
                     </p>
                   </div>
                   <div className="text-muted flex flex-middle">
-                    <Icon fontSize="small">favorite</Icon>
+                    <IconButton size="medium">
+                      <Icon fontSize="small">favorite</Icon>
+                    </IconButton>
                     <span className="pr-16 pb-3">2</span>
-                    <Icon fontSize="small">message</Icon>
+
+                    <IconButton size="medium">
+                      <Icon fontSize="small">message</Icon>
+                    </IconButton>
                     <span className="pb-3">1</span>
                   </div>
                 </div>
@@ -76,21 +80,7 @@ class Tracks extends Component {
                   <source src={data.trackUrl} type="audio/wav" />
                 </audio>
               </div>
-              {/* <div className="track-options ">
-              <IconButton fontSize="small">
-                <Icon fontSize="small">favorite</Icon>
-              </IconButton>
-              <IconButton fontSize="small">
-                <Icon fontSize="small">edit</Icon>
-              </IconButton>
-              <IconButton fontSize="small">
-                <Icon fontSize="small">delete</Icon>
-              </IconButton>
-              <IconButton fontSize="small">
-                <Icon fontSize="small">more_hor</Icon>
-              </IconButton>
-            </div> */}
-              <div>{data.time}</div>
+              <div>{new Date(data.time).toLocaleString()}</div>
             </Card>
           ))}
         </div>
@@ -98,4 +88,4 @@ class Tracks extends Component {
   }
 }
 
-export default Tracks;
+export default Charts;

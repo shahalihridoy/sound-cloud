@@ -1,8 +1,9 @@
-import React, { Component } from "react";
+import React, { Component, Fragment } from "react";
 import { Icon, Card, IconButton } from "@material-ui/core";
 import { Link, withRouter } from "react-router-dom";
 import firebase from "../authentication/FirebaseConfig";
 import { Context } from "../common/Context";
+import CustomizedMenu from "../common/CustomizedMenu";
 
 class Topbar extends Component {
   state = {};
@@ -31,8 +32,8 @@ class Topbar extends Component {
             <Link to="/" className="mx-8">
               Stream
             </Link>
-            <Link to="/" className="mx-8">
-              Library
+            <Link to="/dashboard/charts" className="mx-8">
+              Charts
             </Link>
             <Link to="/dashboard/upload" className="mx-8">
               Upload
@@ -42,16 +43,37 @@ class Topbar extends Component {
             </Link>
           </div>
           <div className="flex flex-middle">
-            <IconButton>
-              <Icon className="text-white">person</Icon>
-            </IconButton>
-            <Context.Consumer>
-              {({ username }) =>
-                username ? (
-                  <span className="capitalize text-white pr-8">{username}</span>
-                ) : null
+            <CustomizedMenu
+              menuButton={
+                <Fragment>
+                  <IconButton>
+                    <Icon className="text-white">person</Icon>
+                  </IconButton>
+                  <Context.Consumer>
+                    {({ username }) =>
+                      username ? (
+                        <span className="capitalize pointer text-white pr-8">
+                          {username}
+                        </span>
+                      ) : null
+                    }
+                  </Context.Consumer>
+                </Fragment>
               }
-            </Context.Consumer>
+            >
+              <div className="capitalize flex flex-middle">
+                <Icon className="mr-16">person</Icon>
+                update profile
+              </div>
+              <div className="capitalize flex flex-middle">
+                <Icon className="mr-16">visibility</Icon>
+                view profile
+              </div>
+              <div className="capitalize flex flex-middle">
+                <Icon className="mr-16">queue_music</Icon>
+                my tracks
+              </div>
+            </CustomizedMenu>
             <IconButton>
               <Icon className="text-white">notifications</Icon>
             </IconButton>

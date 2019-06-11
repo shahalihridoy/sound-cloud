@@ -4,20 +4,46 @@ import { geolocated } from "react-geolocated";
 import firebase from "../authentication/FirebaseConfig";
 import Topbar from "./Topbar";
 import Upload from "./Upload";
-import Tracks from "./Tracks";
+import MyTracks from "./MyTracks";
+import Pricing from "./Pricing";
 import { Context } from "../common/Context";
+import AlertDialog from "../common/AlertDialogue";
+import Charts from "./Charts";
 
 class Dashboard extends Component {
+  state = {
+    OpenPricingDialog: false
+  };
+
+  handlePricingDialogClose = () => {
+    this.setState({ OpenPricingDialog: false });
+  };
+
   componentDidMount() {
     if (!this.props.isGeolocationEnabled) {
       window.alert("Enable location/GPS");
     } else {
     }
+    this.checkPricingPlan();
   }
 
+  checkPricingPlan = () => {
+    firebase
+      .firestore()
+      .collection("users")
+      .doc(localStorage.getItem("uid"))
+      .onSnapshot(doc => {
+        if (!doc) {
+          this.setState({ OpenPricingDialog: true });
+        } else if (!doc.data().plan) {
+          this.setState({ OpenPricingDialog: true });
+        }
+      });
+  };
+
   user = () => {
-    let value = this.context;
-    console.log(value);
+    // let value = this.context;
+    // console.log(value);
   };
 
   componentWillReceiveProps(props) {
@@ -44,13 +70,20 @@ class Dashboard extends Component {
       <Fragment>
         <Topbar />
         <Switch>
-          <Route exact path="/dashboard/my-tracks" component={Tracks} />
+          <Route exact path="/dashboard/my-tracks" component={MyTracks} />
           <Route exact path="/dashboard/upload" component={Upload} />
+          <Route exact path="/dashboard/charts" component={Charts} />
           <Route
             path="/"
             render={props => <Redirect to="/dashboard/upload" />}
           />
         </Switch>
+        <AlertDialog
+          open={this.state.OpenPricingDialog}
+          handleClose={this.handlePricingDialogClose}
+        >
+          <Pricing handlePricingDialogClose={this.handlePricingDialogClose} />
+        </AlertDialog>
       </Fragment>
     );
   }

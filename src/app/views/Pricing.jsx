@@ -1,16 +1,15 @@
 import React, { Component } from "react";
 import {
-  Switch,
-  FormControlLabel,
   Grid,
   Card,
   CardHeader,
   CardContent,
-  Button,
   Divider,
   Icon,
   Fab
 } from "@material-ui/core";
+
+import firebase from "../authentication/FirebaseConfig";
 
 class Pricing extends Component {
   pricingList = [
@@ -54,6 +53,14 @@ class Pricing extends Component {
 
   handleChoice = plan => {
     console.log(plan);
+    firebase
+      .firestore()
+      .collection("users")
+      .doc(localStorage.getItem("uid"))
+      .set({ plan: plan }, { merge: true })
+      .then(() => {
+        this.props.handlePricingDialogClose();
+      });
   };
 
   render() {

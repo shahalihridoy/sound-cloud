@@ -75,13 +75,12 @@ class TrackEditor extends Component {
           firebase
             .firestore()
             .collection("all-tracks")
-            .doc(uid)
-            .collection("tracks")
             .doc(trackID)
             .update({
               ...trackData,
-              time: new Date().toDateString(),
-              username: this.username
+              time: Date.now(),
+              username: this.username,
+              uid: this.uid
             })
             .then(() => {
               this.setState({
@@ -100,12 +99,11 @@ class TrackEditor extends Component {
         firebase
           .firestore()
           .collection("all-tracks")
-          .doc(uid)
-          .collection("tracks")
           .add({
             ...trackData,
-            time: new Date().toDateString(),
-            username: this.username
+            time: Date.now(),
+            username: this.username,
+            uid: this.uid
           })
           .then(snapshot => {
             this.setState({
