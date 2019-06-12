@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { Card, IconButton, Icon } from "@material-ui/core";
 import firebase from "../authentication/FirebaseConfig";
 import Loader from "../common/Loader";
+import Like from "../common/Like";
 
 class Charts extends Component {
   state = {
@@ -9,17 +10,19 @@ class Charts extends Component {
   };
 
   componentWillMount() {
+    let uid = localStorage.getItem("uid");
+
     let tempFileList = [];
+
     firebase
       .firestore()
       .collection("all-tracks")
-      .orderBy("time", "desc")
-      .limit(20)
+      .where(`likedBy.${uid}`, "==", true)
       .onSnapshot(
         docs => {
           tempFileList = [];
           docs.forEach(element => {
-            tempFileList.push(element.data());
+            tempFileList.push({ ...element.data(), trackID: element.id });
           });
           tempFileList.length == 0
             ? this.setState({ files: null })
@@ -34,7 +37,7 @@ class Charts extends Component {
     if (files == null)
       return (
         <div className="container text-center h-100vh-80">
-          <h3 className="relative y-center">No track is uploaded yet !!!</h3>
+          <h3 className="relative y-center">Favourite list is empty !!!</h3>
         </div>
       );
     else if (files.length == 0) return <Loader />;
@@ -61,10 +64,14 @@ class Charts extends Component {
                     </p>
                   </div>
                   <div className="text-muted flex flex-middle">
-                    <IconButton size="medium">
-                      <Icon fontSize="small">favorite</Icon>
-                    </IconButton>
-                    <span className="pr-16 pb-3">2</span>
+                    <Like trackID={data.trackID} likedBy={data.likedBy} />
+                    <span className="pr-16 pb-3">
+                      {data.likedBy
+                        ? Object.keys(data.likedBy).length > 0
+                          ? Object.keys(data.likedBy).length
+                          : ""
+                        : ""}
+                    </span>
 
                     <IconButton size="medium">
                       <Icon fontSize="small">message</Icon>

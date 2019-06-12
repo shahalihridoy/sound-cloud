@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { Card, IconButton, Icon } from "@material-ui/core";
 import firebase from "../authentication/FirebaseConfig";
 import Loader from "../common/Loader";
+import Like from "../common/Like";
 
 class MyTracks extends Component {
   state = {
@@ -18,7 +19,7 @@ class MyTracks extends Component {
         docs => {
           tempFileList = [];
           docs.forEach(element => {
-            tempFileList.push(element.data());
+            tempFileList.push({ ...element.data(), trackID: element.id });
           });
           tempFileList.length == 0
             ? this.setState({ files: null })
@@ -27,6 +28,24 @@ class MyTracks extends Component {
         error => {}
       );
   }
+
+  handleLike = (trackID, isLiked) => {
+    let uid = localStorage.getItem("uid");
+
+    if (isLiked) {
+      firebase
+        .firestore()
+        .collection("all-tracks")
+        .doc(trackID)
+        .update(`likedBy.${uid}`, firebase.firestore.FieldValue.delete());
+    } else {
+      firebase
+        .firestore()
+        .collection("all-tracks")
+        .doc(trackID)
+        .set({ likedBy: { [uid]: true } }, { merge: true });
+    }
+  };
 
   render() {
     let { files } = this.state;
@@ -60,10 +79,14 @@ class MyTracks extends Component {
                     </p>
                   </div>
                   <div className="text-muted flex flex-middle">
-                    <IconButton size="medium">
-                      <Icon fontSize="small">favorite</Icon>
-                    </IconButton>
-                    <span className="pr-16 pb-3">2</span>
+                    <Like trackID={data.trackID} likedBy={data.likedBy} />
+                    <span className="pr-16 pb-3">
+                      {data.likedBy
+                        ? Object.keys(data.likedBy).length > 0
+                          ? Object.keys(data.likedBy).length
+                          : ""
+                        : ""}
+                    </span>
 
                     <IconButton size="medium">
                       <Icon fontSize="small">message</Icon>

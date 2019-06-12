@@ -73,15 +73,25 @@ class Topbar extends Component {
                 <Icon className="mr-16">queue_music</Icon>
                 my tracks
               </div>
+              <Link to="/dashboard/charts">
+                <div className="capitalize flex flex-middle">
+                  <Icon className="mr-16">favorite</Icon>
+                  Favourite
+                </div>
+              </Link>
+              <div
+                className="capitalize flex flex-middle"
+                onClick={this.handleSignOut}
+              >
+                <Icon className="mr-16">power_settings_new</Icon>
+                sign out
+              </div>
             </CustomizedMenu>
             <IconButton>
               <Icon className="text-white">notifications</Icon>
             </IconButton>
             <IconButton>
               <Icon className="text-white">mail</Icon>
-            </IconButton>
-            <IconButton onClick={this.handleSignOut}>
-              <Icon className="text-white">power_settings_new</Icon>
             </IconButton>
             <IconButton>
               <Icon className="text-white">more_hor</Icon>
