@@ -62,7 +62,8 @@ class Signin extends Component {
           .set(
             {
               email: user.email,
-              username: user.displayName
+              username: user.displayName,
+              photoUrl: user.photoURL
             },
             { merge: true }
           )

@@ -5,17 +5,20 @@ import Loader from "../common/Loader";
 import Like from "../common/Like";
 import TrackCard from "../common/TrackCard";
 
-class MyTracks extends Component {
+class Favorite extends Component {
   state = {
     files: []
   };
 
   componentWillMount() {
+    let uid = localStorage.getItem("uid");
+
     let tempFileList = [];
+
     firebase
       .firestore()
       .collection("all-tracks")
-      .where("uid", "==", localStorage.getItem("uid"))
+      .where(`likedBy.${uid}`, "==", true)
       .onSnapshot(
         docs => {
           tempFileList = [];
@@ -30,30 +33,12 @@ class MyTracks extends Component {
       );
   }
 
-  handleLike = (trackID, isLiked) => {
-    let uid = localStorage.getItem("uid");
-
-    if (isLiked) {
-      firebase
-        .firestore()
-        .collection("all-tracks")
-        .doc(trackID)
-        .update(`likedBy.${uid}`, firebase.firestore.FieldValue.delete());
-    } else {
-      firebase
-        .firestore()
-        .collection("all-tracks")
-        .doc(trackID)
-        .set({ likedBy: { [uid]: true } }, { merge: true });
-    }
-  };
-
   render() {
     let { files } = this.state;
     if (files == null)
       return (
         <div className="container text-center h-100vh-80">
-          <h3 className="relative y-center">No track is uploaded yet !!!</h3>
+          <h3 className="relative y-center">Favourite list is empty !!!</h3>
         </div>
       );
     else if (files.length == 0) return <Loader />;
@@ -68,4 +53,4 @@ class MyTracks extends Component {
   }
 }
 
-export default MyTracks;
+export default Favorite;

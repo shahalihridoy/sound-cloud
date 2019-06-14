@@ -35,7 +35,7 @@ class App extends Component {
           .then(doc => {
             localStorage.setItem("user", "true");
             localStorage.setItem("uid", user.uid);
-            this.setState({ username: doc.data().username, uid: user.uid });
+            this.setState({ ...doc.data() });
           });
       } else {
         localStorage.removeItem("user");

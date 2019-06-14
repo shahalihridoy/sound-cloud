@@ -8,7 +8,7 @@ import MyTracks from "./MyTracks";
 import Pricing from "./Pricing";
 import { Context } from "../common/Context";
 import AlertDialog from "../common/AlertDialogue";
-import Charts from "./Charts";
+import Favorite from "./Favorite";
 
 class Dashboard extends Component {
   state = {
@@ -72,7 +72,7 @@ class Dashboard extends Component {
         <Switch>
           <Route exact path="/dashboard/my-tracks" component={MyTracks} />
           <Route exact path="/dashboard/upload" component={Upload} />
-          <Route exact path="/dashboard/charts" component={Charts} />
+          <Route exact path="/dashboard/charts" component={Favorite} />
           <Route
             path="/"
             render={props => <Redirect to="/dashboard/upload" />}

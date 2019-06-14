@@ -12,3 +12,9 @@
     box-shadow: 0 10px 16px rgba(0, 0, 0, 0.2);
   }
 }
+.circular-image {
+  height: 48px !important;
+  width: 48px !important;
+  border-radius: 24px;
+  overflow: hidden;
+}
