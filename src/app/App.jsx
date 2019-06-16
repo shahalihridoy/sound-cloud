@@ -35,10 +35,11 @@ class App extends Component {
           .then(doc => {
             localStorage.setItem("user", "true");
             localStorage.setItem("uid", user.uid);
-            this.setState({ ...doc.data() });
+            this.setState({ uid: user.uid, ...doc.data() });
           });
       } else {
         localStorage.removeItem("user");
+        localStorage.removeItem("uid");
       }
     });
   }

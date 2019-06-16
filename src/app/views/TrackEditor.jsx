@@ -140,7 +140,6 @@ class TrackEditor extends Component {
         })
         .catch(error => {
           console.log(error);
-
           this.setState({
             imgUrl: "/", //to prevent recursive call a value is set if error occurs
             snackbar: { open: true, message: error.message }
@@ -194,6 +193,7 @@ class TrackEditor extends Component {
     this.setState({
       title: this.props.file.name
     });
+    this.getUserInfo();
   }
 
   handleSnackbarClose = () => {
@@ -214,12 +214,12 @@ class TrackEditor extends Component {
     let { username, uid } = this.context;
     this.username = username;
     this.uid = uid;
+    console.log(this.context);
   };
 
   render() {
     let { tabIndex, snackbar, progress, uploaded } = this.state;
     let { file, handleCancel } = this.props;
-    this.getUserInfo();
     return (
       <Card className="my-16">
         <div className="flex flex-space-between light-gray py-12 px-16">

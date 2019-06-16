@@ -1,9 +1,8 @@
-import React, { Component } from "react";
-import { Card, IconButton, Icon } from "@material-ui/core";
+import React, { Component, Fragment } from "react";
 import firebase from "../authentication/FirebaseConfig";
 import Loader from "../common/Loader";
-import Like from "../common/Like";
 import TrackCard from "../common/TrackCard";
+import { SoundPlayer } from "../common/SoundPlayer";
 
 class Favorite extends Component {
   state = {
@@ -46,7 +45,14 @@ class Favorite extends Component {
       return (
         <div className="container my-16">
           {files.map((data, index) => (
-            <TrackCard data={data} key={index} />
+            <Fragment>
+              <TrackCard data={data} key={index} />
+              <SoundPlayer
+                streamUrl={data.trackUrl}
+                track={data}
+                preloadType="metadata"
+              />
+            </Fragment>
           ))}
         </div>
       );

@@ -9,6 +9,7 @@ import Pricing from "./Pricing";
 import { Context } from "../common/Context";
 import AlertDialog from "../common/AlertDialogue";
 import Favorite from "./Favorite";
+import StreamTrack from "./StreamTrack";
 
 class Dashboard extends Component {
   state = {
@@ -33,10 +34,10 @@ class Dashboard extends Component {
       .collection("users")
       .doc(localStorage.getItem("uid"))
       .onSnapshot(doc => {
-        if (!doc) {
+        if (!doc.data().plan) {
           this.setState({ OpenPricingDialog: true });
-        } else if (!doc.data().plan) {
-          this.setState({ OpenPricingDialog: true });
+        } else {
+          this.setState({ OpenPricingDialog: false });
         }
       });
   };
@@ -73,6 +74,7 @@ class Dashboard extends Component {
           <Route exact path="/dashboard/my-tracks" component={MyTracks} />
           <Route exact path="/dashboard/upload" component={Upload} />
           <Route exact path="/dashboard/charts" component={Favorite} />
+          <Route exact path="/dashboard/stream/:id" component={StreamTrack} />
           <Route
             path="/"
             render={props => <Redirect to="/dashboard/upload" />}

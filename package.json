@@ -13,6 +13,7 @@
     "react-material-ui-form-validator": "^2.0.8",
     "react-router-dom": "^5.0.0",
     "react-scripts": "3.0.1",
+    "react-soundplayer": "^1.0.4",
     "react-swipeable-views": "^0.13.3"
   },
   "scripts": {
