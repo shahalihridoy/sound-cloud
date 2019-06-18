@@ -61,18 +61,24 @@ class Topbar extends Component {
                 </Fragment>
               }
             >
-              <div className="capitalize flex flex-middle">
-                <Icon className="mr-16">person</Icon>
-                update profile
-              </div>
-              <div className="capitalize flex flex-middle">
-                <Icon className="mr-16">visibility</Icon>
-                view profile
-              </div>
-              <div className="capitalize flex flex-middle">
-                <Icon className="mr-16">queue_music</Icon>
-                my tracks
-              </div>
+              <Link to="/dashboard/edit-profile">
+                <div className="capitalize flex flex-middle">
+                  <Icon className="mr-16">person</Icon>
+                  update profile
+                </div>
+              </Link>
+              <Link to="/dashboard/view-profile">
+                <div className="capitalize flex flex-middle">
+                  <Icon className="mr-16">visibility</Icon>
+                  view profile
+                </div>
+              </Link>
+              <Link to="/dashboard/my-tracks">
+                <div className="capitalize flex flex-middle">
+                  <Icon className="mr-16">queue_music</Icon>
+                  my tracks
+                </div>
+              </Link>
               <Link to="/dashboard/charts">
                 <div className="capitalize flex flex-middle">
                   <Icon className="mr-16">favorite</Icon>

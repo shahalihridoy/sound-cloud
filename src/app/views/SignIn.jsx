@@ -107,8 +107,8 @@ class Signin extends Component {
                   className="my-8 w-100"
                   label="Email"
                   onChange={this.handleChange}
+                  type="email"
                   name="email"
-                  multiline
                   value={email}
                   validators={["required", "isEmail"]}
                   errorMessages={[
@@ -129,7 +129,7 @@ class Signin extends Component {
                   variant="outlined"
                 />
                 <Button
-                  className="x-center"
+                  className="x-center capitalize"
                   variant="contained"
                   type="submit"
                   color="secondary"
@@ -144,14 +144,24 @@ class Signin extends Component {
               </ValidatorForm>
 
               <Divider className="my-12" variant="middle" />
-              <Button
-                onClick={this.siginInWithGoogle}
-                className=" x-center"
-                variant="contained"
-                color="primary"
-              >
-                Sign In with Google
-              </Button>
+              <div className="flex flex-center">
+                <Button
+                  onClick={this.siginInWithGoogle}
+                  className="capitalize"
+                  variant="contained"
+                  color="primary"
+                >
+                  Sign In with Google
+                </Button>
+                <Button
+                  onClick={() => this.props.history.push("/signup")}
+                  className="capitalize ml-16"
+                  variant="contained"
+                  color="secondary"
+                >
+                  Sign Up
+                </Button>
+              </div>
             </div>
           </Card>
         </div>

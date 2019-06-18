@@ -14,7 +14,7 @@ class TrackCard extends Component {
 
     return (
       <Card className="track-card p-16 mb-8">
-        <div className="flex flex-middle flex-space-between">
+        <div className="flex flex-space-between">
           <div className="flex">
             <div className="mr-16 h-100">
               <img
@@ -59,16 +59,9 @@ class TrackCard extends Component {
               </div>
             </div>
           </div>
-          <div>
-            <audio controls>
-              <source src={data.trackUrl} type="audio/mpeg" />
-              <source src={data.trackUrl} type="audio/ogg" />
-              <source src={data.trackUrl} type="audio/wav" />
-            </audio>
-          </div>
-          <div className="text-muted">
+          <small className="text-muted">
             {new Date(data.time).toLocaleString()}
-          </div>
+          </small>
         </div>
         {this.state.openCommentBox ? (
           <Fragment>

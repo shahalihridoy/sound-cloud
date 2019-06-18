@@ -24,6 +24,7 @@ class CommentBox extends Component {
       .collection("comments")
       .doc(trackID)
       .collection("comments")
+      .orderBy("date", "asc")
       .onSnapshot(docs => {
         tempCommentList = [];
         docs.forEach(comment => {
@@ -36,38 +37,39 @@ class CommentBox extends Component {
   submitComment = (event, trackID) => {
     let { uid, photoUrl, username } = this.context;
     if (event.key === "Enter" && !event.shiftKey) {
+      if (this.state.comment !== "\n") {
+        //   increamenting comment number in track
+        firebase
+          .firestore()
+          .collection("all-tracks")
+          .doc(trackID)
+          .get()
+          .then(doc => {
+            let totalComment = doc.data().totalComment;
+            firebase
+              .firestore()
+              .collection("all-tracks")
+              .doc(trackID)
+              .set(
+                { totalComment: totalComment ? totalComment + 1 : 1 },
+                { merge: true }
+              );
+          });
+
+        firebase
+          .firestore()
+          .collection("comments")
+          .doc(trackID)
+          .collection("comments")
+          .add({
+            comment: this.state.comment,
+            date: Date.now(),
+            uid: uid,
+            username: username,
+            photoUrl: photoUrl
+          });
+      }
       this.setState({ comment: "" });
-
-      //   increamenting comment number in track
-      firebase
-        .firestore()
-        .collection("all-tracks")
-        .doc(trackID)
-        .get()
-        .then(doc => {
-          let totalComment = doc.data().totalComment;
-          firebase
-            .firestore()
-            .collection("all-tracks")
-            .doc(trackID)
-            .set(
-              { totalComment: totalComment ? totalComment + 1 : 1 },
-              { merge: true }
-            );
-        });
-
-      firebase
-        .firestore()
-        .collection("comments")
-        .doc(trackID)
-        .collection("comments")
-        .add({
-          comment: this.state.comment,
-          date: Date.now(),
-          uid: uid,
-          username: username,
-          photoUrl: photoUrl
-        });
     }
   };
 

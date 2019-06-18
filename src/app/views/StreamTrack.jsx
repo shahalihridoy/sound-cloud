@@ -42,7 +42,7 @@ class StreamTrack extends Component {
       );
     else
       return (
-        <div className="container py-16">
+        <div>
           <SoundPlayer
             streamUrl={track.trackUrl}
             track={track}
@@ -50,8 +50,9 @@ class StreamTrack extends Component {
           />
           {trackID ? (
             <Fragment>
-              <div className="py-8" />
-              <CommentBox trackID={trackID} />
+              <div className="px-16 pt-8 pb-16">
+                <CommentBox trackID={trackID} />
+              </div>
             </Fragment>
           ) : null}
         </div>

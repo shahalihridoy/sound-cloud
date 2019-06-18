@@ -1,0 +1,31 @@
+.view-profile {
+  color: white;
+  .view-profile__image {
+    height: 200px;
+    width: 200px;
+    border-radius: 50%;
+    overflow: hidden;
+  }
+  .view-profile__cover-button-holder {
+    visibility: hidden;
+    input[type="file"] {
+      display: none;
+    }
+  }
+  &:hover {
+    .view-profile__cover-button-holder {
+      visibility: visible;
+    }
+  }
+}
+.view-profile-links {
+  a {
+    font-size: 1.25rem;
+    font-weight: 600;
+    padding: 8px 16px;
+    border-radius: 4px;
+    &:hover {
+      background: #919191;
+    }
+  }
+}

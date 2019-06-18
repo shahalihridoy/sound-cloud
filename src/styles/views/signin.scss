@@ -1,7 +1,11 @@
 .signin__bg {
   position: fixed;
   background-image: url("/assets/images/bg-1.jpg"); /* fallback */
-  background-image: linear-gradient(to right, rgba(0, 0, 0, 0.7) 0%, rgba(0, 0, 0, 0.7) 100%),
+  background-image: linear-gradient(
+      to right,
+      rgba(0, 0, 0, 0.7) 0%,
+      rgba(0, 0, 0, 0.7) 100%
+    ),
     url("/assets/images/bg-1.jpg");
   background-repeat: no-repeat;
   background-size: cover;
@@ -11,7 +15,7 @@
   overflow: auto;
 }
 .signin__card {
-  max-width: 350px;
+  max-width: 370px;
   margin: auto auto;
 }
 .signup__card {

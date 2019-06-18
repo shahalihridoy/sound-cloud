@@ -27,11 +27,7 @@ class TrackEditor extends Component {
     tabIndex: 0,
     progress: 0,
     uploaded: 0,
-    loading: false,
-    snackbar: {
-      open: false,
-      message: ""
-    }
+    loading: false
   };
 
   handleTabChange = (event, value) => {
@@ -45,16 +41,14 @@ class TrackEditor extends Component {
 
   handleFormSubmit = () => {
     let { trackID } = this.state;
+    let { openSnackbar } = this.context;
     let uid = this.uid;
     // when user id is not available
     if (uid === "uid") {
       this.setState({
-        loading: false,
-        snackbar: {
-          open: true,
-          message: "User is not available. Try login"
-        }
+        loading: false
       });
+      this.context.openSnackbar("User is not available. Try login");
       return;
     }
 
@@ -84,15 +78,15 @@ class TrackEditor extends Component {
             })
             .then(() => {
               this.setState({
-                loading: false,
-                snackbar: { open: true, message: "Saved Successfully" }
+                loading: false
               });
+              openSnackbar("Saved Successfully");
             })
             .catch(error => {
               this.setState({
-                loading: false,
-                snackbar: { open: true, message: error.message }
+                loading: false
               });
+              openSnackbar(error.message);
             });
         }
       } else {
@@ -108,15 +102,15 @@ class TrackEditor extends Component {
           .then(snapshot => {
             this.setState({
               loading: false,
-              trackID: snapshot.id,
-              snackbar: { open: true, message: "Updated Successfully" }
+              trackID: snapshot.id
             });
+            openSnackbar("Updated Successfully");
           })
           .catch(error => {
             this.setState({
-              loading: false,
-              snackbar: { open: true, message: error.message }
+              loading: false
             });
+            openSnackbar(error.message);
           });
       }
     } else {
@@ -125,6 +119,7 @@ class TrackEditor extends Component {
   };
 
   uploadImage = () => {
+    let { openSnackbar } = this.context;
     if (this.imageFile != null) {
       let uploadTask = firebase
         .storage()
@@ -132,26 +127,30 @@ class TrackEditor extends Component {
         .child(this.uid + "/" + this.imageFile.name)
         .put(this.imageFile);
 
-      uploadTask.snapshot.ref
-        .getDownloadURL()
-        .then(imgUrl => {
-          this.setState({ imgUrl });
-          this.handleFormSubmit();
-        })
-        .catch(error => {
-          console.log(error);
+      uploadTask.on(
+        "state_changed",
+        snapshot => {},
+        error => {
           this.setState({
-            imgUrl: "/", //to prevent recursive call a value is set if error occurs
-            snackbar: { open: true, message: error.message }
+            imgUrl: "/" //to prevent recursive call a value is set if error occurs
           });
+          openSnackbar(error.message);
           this.handleFormSubmit();
-        });
+        },
+        () => {
+          uploadTask.snapshot.ref.getDownloadURL().then(imgUrl => {
+            this.setState({ imgUrl });
+            this.handleFormSubmit();
+          });
+        }
+      );
     } else {
       this.handleFormSubmit();
     }
   };
 
   uploadTrack = () => {
+    let { openSnackbar } = this.context;
     let { file } = this.props;
     let uploadTask = firebase
       .storage()
@@ -167,12 +166,9 @@ class TrackEditor extends Component {
       },
       error => {
         this.setState({
-          loading: false,
-          snackbar: {
-            open: true,
-            message: error.message
-          }
+          loading: false
         });
+        openSnackbar(error.message);
       },
       () => {
         uploadTask.snapshot.ref.getDownloadURL().then(url => {
@@ -195,14 +191,6 @@ class TrackEditor extends Component {
     });
     this.getUserInfo();
   }
-
-  handleSnackbarClose = () => {
-    this.setState({
-      snackbar: {
-        open: false
-      }
-    });
-  };
 
   handleImageSelection = file => {
     // set imgUrl to null on new image selection
@@ -270,12 +258,6 @@ class TrackEditor extends Component {
             {/* <div>Item Three</div> */}
           </SwipeableViews>
         </div>
-
-        <SimpleSnackbar
-          open={snackbar.open}
-          message={snackbar.message}
-          handleClose={this.handleSnackbarClose}
-        />
       </Card>
     );
   }

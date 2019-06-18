@@ -10,6 +10,9 @@ import { Context } from "../common/Context";
 import AlertDialog from "../common/AlertDialogue";
 import Favorite from "./Favorite";
 import StreamTrack from "./StreamTrack";
+import ProfileViewer from "./ProfileViewer";
+import ProfileEditor from "./ProfileEditor";
+import SimpleSnackbar from "../common/SimpleSnackbar";
 
 class Dashboard extends Component {
   state = {
@@ -34,17 +37,12 @@ class Dashboard extends Component {
       .collection("users")
       .doc(localStorage.getItem("uid"))
       .onSnapshot(doc => {
-        if (!doc.data().plan) {
-          this.setState({ OpenPricingDialog: true });
+        if (doc.data()) {
+          if (!doc.data().plan) this.setState({ OpenPricingDialog: true });
         } else {
           this.setState({ OpenPricingDialog: false });
         }
       });
-  };
-
-  user = () => {
-    // let value = this.context;
-    // console.log(value);
   };
 
   componentWillReceiveProps(props) {
@@ -66,7 +64,7 @@ class Dashboard extends Component {
   }
 
   render() {
-    this.user();
+    let { snackbar, handleSnackbarClose } = this.context;
     return (
       <Fragment>
         <Topbar />
@@ -75,6 +73,16 @@ class Dashboard extends Component {
           <Route exact path="/dashboard/upload" component={Upload} />
           <Route exact path="/dashboard/charts" component={Favorite} />
           <Route exact path="/dashboard/stream/:id" component={StreamTrack} />
+          <Route
+            exact
+            path="/dashboard/view-profile"
+            component={ProfileViewer}
+          />
+          <Route
+            exact
+            path="/dashboard/edit-profile"
+            component={ProfileEditor}
+          />
           <Route
             path="/"
             render={props => <Redirect to="/dashboard/upload" />}
@@ -86,6 +94,12 @@ class Dashboard extends Component {
         >
           <Pricing handlePricingDialogClose={this.handlePricingDialogClose} />
         </AlertDialog>
+
+        <SimpleSnackbar
+          open={snackbar.open}
+          message={snackbar.message}
+          handleClose={handleSnackbarClose}
+        />
       </Fragment>
     );
   }

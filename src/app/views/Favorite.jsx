@@ -45,14 +45,7 @@ class Favorite extends Component {
       return (
         <div className="container my-16">
           {files.map((data, index) => (
-            <Fragment>
-              <TrackCard data={data} key={index} />
-              <SoundPlayer
-                streamUrl={data.trackUrl}
-                track={data}
-                preloadType="metadata"
-              />
-            </Fragment>
+            <TrackCard data={data} key={index} />
           ))}
         </div>
       );

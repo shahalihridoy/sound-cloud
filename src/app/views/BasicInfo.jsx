@@ -21,6 +21,7 @@ class BasicInfo extends Component {
 
   handleImageSelect = event => {
     let file = event.target.files[0];
+    if (!file) return;
     let url = URL.createObjectURL(file);
 
     this.setState({ imgUrl: url });

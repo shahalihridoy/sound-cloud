@@ -20,8 +20,27 @@ import { Context } from "./common/Context";
 
 class App extends Component {
   state = {
-    username: "",
-    uid: ""
+    snackbar: {
+      open: false,
+      message: ""
+    }
+  };
+
+  openSnackbar = message => {
+    this.setState({
+      snackbar: {
+        open: true,
+        message: message
+      }
+    });
+  };
+
+  handleSnackbarClose = () => {
+    this.setState({
+      snackbar: {
+        open: false
+      }
+    });
   };
 
   componentDidMount() {
@@ -31,8 +50,7 @@ class App extends Component {
           .firestore()
           .collection("users")
           .doc(user.uid)
-          .get()
-          .then(doc => {
+          .onSnapshot(doc => {
             localStorage.setItem("user", "true");
             localStorage.setItem("uid", user.uid);
             this.setState({ uid: user.uid, ...doc.data() });
@@ -46,8 +64,15 @@ class App extends Component {
 
   render() {
     let authenticated = localStorage.getItem("user");
+    let { open, message } = this.state;
     return (
-      <Context.Provider value={{ ...this.state }}>
+      <Context.Provider
+        value={{
+          ...this.state,
+          handleSnackbarClose: this.handleSnackbarClose,
+          openSnackbar: this.openSnackbar
+        }}
+      >
         <ThemeProvider theme={theme}>
           <Router>
             <Switch>
